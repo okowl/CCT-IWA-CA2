@@ -14,10 +14,12 @@
   },
   "scripts": {
     "dev": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html --public-url ./"
+    "build": "parcel build ./src/index.html --public-url ./",
+    "start": "yarn build && node ./src/server/app.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.11",
+    "express": "^4.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "typeface-roboto": "^0.0.75"
