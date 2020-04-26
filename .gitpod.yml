@@ -1,0 +1,9 @@
+image:
+file: .gitpod.Dockerfile
+
+Create a .gitpod.Dockerfile file, and add:
+
+FROM gitpod/workspace-full
+
+USER gitpod
+RUN curl https://cli-assets.heroku.com/install.sh | sh
