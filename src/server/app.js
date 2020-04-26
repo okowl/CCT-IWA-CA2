@@ -3,27 +3,36 @@
  */
 
 const express = require('express');
-const router = express();
+const app = express();
 const port = process.env.PORT || 3000;
 const address = process.env.IP || "0.0.0.0";
 
-router.use(express.static('dist'));
+app.use(express.static('dist'));
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_IWA_URL;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
-client.connect(err => {
+app.get('/api/create', (req, res) => {
+  client.connect(err => {
     if (err) {
         console.error(err);
         client.close();
         return;
     }
     const collection = client.db("playlist").collection("playlist");
+    const writeResult = collection.insert({
+      channel: "wearepussyriot",
+      published_date: "8/31/2019 9:50:21 a8/p8",
+      title: "Pussy Riot - Police State",
+      url: "https://www.youtube.com/watch?v=oaZl12Z5P7g"
+    }, { ordered: true });
     // perform actions on the collection object
+    res.send(writeResult);
     client.close();
 });
+});
 
-router.listen(port, address, function() {
+app.listen(port, address, function() {
   console.log("Server listening at", address + ":" + port);
 });
