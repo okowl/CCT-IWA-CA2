@@ -1,0 +1,15 @@
+{
+  "name": "CCT-IWA-CA2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/okowl/CCT-IWA-CA2.git",
+  "author": "Oli <olli.kiseleva@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "dev": "parcel ./index.html",
+    "build": "parcel build ./index.html"
+  }
+}
