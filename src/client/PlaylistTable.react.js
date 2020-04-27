@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import MaterialTable from 'material-table';
+import CreateResultCard from './CreateResultCard.react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -36,6 +37,9 @@ const addEntry = (newData, refetch, setUpdateResult, tableResolve) => {
                 setUpdateResult({data});
                 tableResolve();
                 refetch();
+                setTimeout(() => {
+                    setUpdateResult(null);
+                }, 5000)
             });
         }
     );
@@ -98,6 +102,8 @@ export default function PlaylistTable({refetch, fetchResult}) {
   
   return (
     <div style={{ maxWidth: "100%" }}>
+    { updateResult ? 
+        <CreateResultCard result={updateResult}/> : null}
         <MaterialTable
         icons={tableIcons}
         title="Playlist Table"
