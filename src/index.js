@@ -14,8 +14,7 @@ const getAllEntries = (setFetchResult) => {
                 setFetchResult({err: `Looks like there was a problem. Status Code: ${res.status}`});
                 return;
             }
-
-            // Examine the text in the response
+            
             res.json().then(function(data) {
                 setFetchResult({ data });
             });
