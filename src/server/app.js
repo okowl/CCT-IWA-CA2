@@ -21,7 +21,7 @@ app.get('/api/create', (req, res) => {
         return;
     }
     const collection = client.db("playlist").collection("playlist");
-    const writeResult = collection.insert({
+    const writeResult = collection.insertOne({
       channel: "wearepussyriot",
       published_date: "8/31/2019 9:50:21 a8/p8",
       title: "Pussy Riot - Police State",
