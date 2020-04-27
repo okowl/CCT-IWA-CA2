@@ -7,46 +7,93 @@ const app = express();
 const port = process.env.PORT || 3000;
 const address = process.env.IP || "0.0.0.0";
 
-const MONGODB_DB = "playlist";
-const MONGODB_COLLECTION = "playlist";
+const DB = "playlist";
+const COLLECTION = "playlist";
 
 
 app.use(express.static('dist'));
 app.use(express.json());
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 const uri = process.env.MONGODB_IWA_URL;
 
 let client = null;
 MongoClient.connect(uri, { 
     useNewUrlParser: true, 
-    }, (err, res) => {
-    if (err) {
-        console.error(err);
-        return;
-    }   
-    client = res
+}).then((db) => {
+    client = db;
     app.listen(port, address, function() {
         console.log("Server listening at", address + ":" + port);
     });
+}).catch((err) => {
+    console.error(err);
 });
 
-app.post('/api/create', (req, res) => {
+
+// CREATE OR UPDATE
+app.post('/api/playlist', (req, res) => {
     const {
+        _id,
         channel,
         published_date,
         title,
         url
     } = req.body;
 
-    const collection = client.db(MONGODB_DB).collection(MONGODB_COLLECTION);
-    collection.insertOne({
-        channel,
-        published_date,
-        title,
-        url
-    }, { ordered: true }).then((writeResult) => {
-        res.send(writeResult);
-        client.close();
+    const collection = client.db(DB).collection(COLLECTION);
+    if (_id) {
+        collection.updateOne(
+            {_id: new ObjectID(_id)}, 
+            { $set: {
+                channel,
+                published_date,
+                title,
+                url
+            }},
+            { upsert: true })
+        .then((writeResult) => {
+            res.send(writeResult);
+        }).catch((err) => {
+            console.error(err);
+        });
+    } else {
+        collection.insertOne({
+            channel,
+            published_date,
+            title,
+            url
+        }, { ordered: true }).then((writeResult) => {
+            res.send(writeResult);
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+});
+
+
+// READ
+app.get('/api/playlist', (_, res) => {
+    const collection = client.db(DB).collection(COLLECTION);
+    collection.find({}).toArray().then((playlists) => {
+        res.send(playlists ? playlists : []);
+    }).catch((err) => {
+        res.send(err);
     });
 });
+
+// DELETE
+app.delete('/api/playlist/:id', (req, res) => {
+    const {
+        id
+    } = req.params;
+
+    const collection = client.db(DB).collection(COLLECTION);
+    if (id) {
+        collection.deleteOne({_id: new ObjectID(id)}).then((data) => {
+            res.send(data ? data : {});
+        }).catch((err) => {
+          res.send(err);
+        });
+    }
+})
