@@ -9,7 +9,18 @@ const App = () => {
     return (
     <>
         <Button variant="contained" color="primary" onClick={() => {
-            fetch("/api/create").then(
+            fetch("/api/create", {
+                method: 'post',
+                headers: {
+                 "Content-Type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    channel: "wearepussyriot",
+                    published_date: "8/31/2019 9:50:21 a8/p8",
+                    title: "Pussy Riot - Police State",
+                    url: "https://www.youtube.com/watch?v=oaZl12Z5P7g"
+                })
+            }).then(
                 (response) => {
                     if (response.status !== 200) {
                         setResult('Looks like there was a problem. Status Code: ' +

@@ -7,32 +7,46 @@ const app = express();
 const port = process.env.PORT || 3000;
 const address = process.env.IP || "0.0.0.0";
 
+const MONGODB_DB = "playlist";
+const MONGODB_COLLECTION = "playlist";
+
+
 app.use(express.static('dist'));
+app.use(express.json());
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_IWA_URL;
-const client = new MongoClient(uri, { useNewUrlParser: true });
 
-app.get('/api/create', (req, res) => {
-  client.connect(err => {
+let client = null;
+MongoClient.connect(uri, { 
+    useNewUrlParser: true, 
+    }, (err, res) => {
     if (err) {
         console.error(err);
-        client.close();
         return;
-    }
-    const collection = client.db("playlist").collection("playlist");
-    const writeResult = collection.insertOne({
-      channel: "wearepussyriot",
-      published_date: "8/31/2019 9:50:21 a8/p8",
-      title: "Pussy Riot - Police State",
-      url: "https://www.youtube.com/watch?v=oaZl12Z5P7g"
-    }, { ordered: true });
-    // perform actions on the collection object
-    res.send(writeResult);
-    client.close();
-});
+    }   
+    client = res
+    app.listen(port, address, function() {
+        console.log("Server listening at", address + ":" + port);
+    });
 });
 
-app.listen(port, address, function() {
-  console.log("Server listening at", address + ":" + port);
+app.post('/api/create', (req, res) => {
+    const {
+        channel,
+        published_date,
+        title,
+        url
+    } = req.body;
+
+    const collection = client.db(MONGODB_DB).collection(MONGODB_COLLECTION);
+    collection.insertOne({
+        channel,
+        published_date,
+        title,
+        url
+    }, { ordered: true }).then((writeResult) => {
+        res.send(writeResult);
+        client.close();
+    });
 });
