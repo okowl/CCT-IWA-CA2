@@ -1,7 +1,11 @@
 import React, {forwardRef} from 'react';
 import MaterialTable from 'material-table';
 import ReactPlayer from 'react-player';
+import DatePicker from "react-datepicker";
 import CreateResultCard from './CreateResultCard.react';
+
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -93,7 +97,26 @@ export default function PlaylistTable({refetch, fetchResult}) {
     const columns = [
         { title: 'Title', field: 'title' },
         { title: 'Channel', field: 'channel' },
-        { title: 'Published date', field: 'published_date' },
+        { title: 'Published date', field: 'published_date', 
+        
+        editComponent: ({rowData, onChange}) => {
+            const [y, m, d] = rowData.published_date.split('/');
+            const selected = new Date(y, m, d);
+            return (
+                <DatePicker
+                    dateFormat="yyyy/MM/dd"
+                    showTimeSelect={false}
+                    selected={selected}
+                    onChange={(e) => {
+                      const [y, m, d] = e.target.value.split('/');
+                      const selected = new Date(y, m, d);
+                      onChange(selected);
+                    }}
+                />
+            );
+        }
+    
+    },
         { title: 'Link', field: 'url', render: (rowData) => <ReactPlayer
           controls
           url={rowData.url}
@@ -116,13 +139,13 @@ export default function PlaylistTable({refetch, fetchResult}) {
         columns={columns}
         data={fetchResult.data}
         editable={{
-            onRowAdd: (newData) => new Promise((resolve, reject) => {
+            onRowAdd: (newData) => new Promise((resolve) => {
                 return addEntry(newData, refetch, setUpdateResult, resolve);
             }),
-            onRowUpdate: (newData) => new Promise((resolve, reject) => {
+            onRowUpdate: (newData) => new Promise((resolve) => {
                 return addEntry(newData, refetch, setUpdateResult, resolve);
             }),
-            onRowDelete: (oldData) => new Promise((resolve, reject) => {
+            onRowDelete: (oldData) => new Promise((resolve) => {
                 return removeEntry(oldData._id, refetch, setUpdateResult, resolve);
             }),
         }}
