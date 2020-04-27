@@ -5,17 +5,15 @@ import 'typeface-roboto';
 import CreateResultCard from './client/CreateResultCard.react';
 import PlaylistTable from './client/PlaylistTable.react';
 
-
-
 const getAllEntries = (setFetchResult) => {
- fetch("/api/playlist").then(
+    fetch("/api/playlist").then(
         (res) => {
             if (res.status !== 200) {
-                setFetchResult({err: `Looks like there was a problem. Status Code: ${res.status}`});
+                setFetchResult({ err: `Looks like there was a problem. Status Code: ${res.status}` });
                 return;
             }
-            
-            res.json().then(function(data) {
+
+            res.json().then(function (data) {
                 setFetchResult({ data });
             });
         }
@@ -27,11 +25,11 @@ const App = () => {
     const [fetchResult, setFetchResult] = React.useState(null);
     const refetch = () => getAllEntries(setFetchResult);
     React.useEffect(() => {
-      refetch();
+        refetch();
     }, []);
 
     return (
-        <PlaylistTable refetch={refetch} fetchResult={fetchResult}/>
+        <PlaylistTable refetch={refetch} fetchResult={fetchResult} />
     );
 }
 

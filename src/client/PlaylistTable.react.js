@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import MaterialTable from 'material-table';
+import ReactPlayer from 'react-player';
 import CreateResultCard from './CreateResultCard.react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -93,7 +94,12 @@ export default function PlaylistTable({refetch, fetchResult}) {
         { title: 'Title', field: 'title' },
         { title: 'Channel', field: 'channel' },
         { title: 'Published date', field: 'published_date' },
-        { title: 'Link', field: 'url'},
+        { title: 'Link', field: 'url', render: (rowData) => <ReactPlayer
+          controls
+          url={rowData.url}
+          width='100%'
+          height='400px'
+        />},
     ];
 
   if (!fetchResult || !fetchResult.data || fetchResult.data.length === 0) {
@@ -113,7 +119,7 @@ export default function PlaylistTable({refetch, fetchResult}) {
             onRowAdd: (newData) => new Promise((resolve, reject) => {
                 return addEntry(newData, refetch, setUpdateResult, resolve);
             }),
-            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => {
+            onRowUpdate: (newData) => new Promise((resolve, reject) => {
                 return addEntry(newData, refetch, setUpdateResult, resolve);
             }),
             onRowDelete: (oldData) => new Promise((resolve, reject) => {

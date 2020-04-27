@@ -10,7 +10,6 @@ const address = process.env.IP || "0.0.0.0";
 const DB = "playlist";
 const COLLECTION = "playlist";
 
-
 app.use(express.static('dist'));
 app.use(express.json());
 
