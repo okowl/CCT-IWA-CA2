@@ -6,7 +6,9 @@ import CreateResultCard from './CreateResultCard.react';
 
 
 import "react-datepicker/dist/react-datepicker.css";
-
+/**
+ * Material UI icons imported from Material-UI library
+ */
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -23,7 +25,9 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
-  
+ /**
+  *  Function to add new entry to DB using POST method
+  * */ 
 const addEntry = (newData, refetch, setUpdateResult, tableResolve) => {
   return fetch("/api/playlist", {
         method: 'post',
@@ -32,12 +36,14 @@ const addEntry = (newData, refetch, setUpdateResult, tableResolve) => {
         },
         body: JSON.stringify(newData)
     }).then(
-        (res) => {
+        (res) => { //if result set returns anything except code '200' - some error occured 
+        //and application will return an error
             if (res.status !== 200) {
                 setUpdateResult({err: `Looks like there was a problem. Status Code: ${res.status}`});
                 return;
             }
             
+            //if new entry was added successfully it will show updated information 
             res.json().then(function(data) {
                 setUpdateResult({data});
                 tableResolve();
@@ -99,22 +105,22 @@ export default function PlaylistTable({refetch, fetchResult}) {
         { title: 'Channel', field: 'channel' },
         { title: 'Published date', field: 'published_date', 
         
-        editComponent: ({rowData, onChange}) => {
-            const [y, m, d] = rowData.published_date.split('/');
-            const selected = new Date(y, m, d);
-            return (
-                <DatePicker
-                    dateFormat="yyyy/MM/dd"
-                    showTimeSelect={false}
-                    selected={selected}
-                    onChange={(e) => {
-                      const [y, m, d] = e.target.value.split('/');
-                      const selected = new Date(y, m, d);
-                      onChange(selected);
-                    }}
-                />
-            );
-        }
+        // editComponent: ({rowData, onChange}) => {
+        //     const [y, m, d] = rowData.published_date.split('/');
+        //     const selected = new Date(y, m, d);
+        //     return (
+        //         <DatePicker
+        //             dateFormat="yyyy/MM/dd"
+        //             showTimeSelect={false}
+        //             selected={selected}
+        //             onChange={(e) => {
+        //               const [y, m, d] = e.target.value.split('/');
+        //               const selected = new Date(y, m, d);
+        //               onChange(selected);
+        //             }}
+        //         />
+        //     );
+        // }
     
     },
         { title: 'Link', field: 'url', render: (rowData) => <ReactPlayer

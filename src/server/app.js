@@ -17,6 +17,9 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const uri = process.env.MONGODB_IWA_URL;
 
+/**
+ * Connection to the MongoDB using MongoDB client instead of mongoose
+ */
 let client = null;
 MongoClient.connect(uri, { 
     useNewUrlParser: true, 
@@ -29,8 +32,11 @@ MongoClient.connect(uri, {
     console.error(err);
 });
 
-
-// CREATE OR UPDATE
+/**
+ * CREATE OR UPDATE
+ * if _id found in DB this function will update information on exisiting entry
+ * if the _id does not match with anything in MONGO DB it will insert new entry
+ */
 app.post('/api/playlist', (req, res) => {
     const {
         _id,
@@ -41,7 +47,7 @@ app.post('/api/playlist', (req, res) => {
     } = req.body;
 
     const collection = client.db(DB).collection(COLLECTION);
-    if (_id) {
+    if (_id) { //chech the id -> update entry
         collection.updateOne(
             {_id: new ObjectID(_id)}, 
             { $set: {
@@ -56,7 +62,7 @@ app.post('/api/playlist', (req, res) => {
         }).catch((err) => {
             console.error(err);
         });
-    } else {
+    } else { // insert new entry
         collection.insertOne({
             channel,
             published_date,
@@ -71,17 +77,24 @@ app.post('/api/playlist', (req, res) => {
 });
 
 
-// READ
+
+/**
+ * READ
+ * Connect to DB -> retrive all data and parse it to ARRAY 
+ */
 app.get('/api/playlist', (_, res) => {
     const collection = client.db(DB).collection(COLLECTION);
     collection.find({}).toArray().then((playlists) => {
-        res.send(playlists ? playlists : []);
+        res.send(playlists ? playlists : []); //if DB doesn't have any data inside create empty array
     }).catch((err) => {
         res.send(err);
     });
 });
 
-// DELETE
+/**
+ * DELETE
+ * Function to delete entry from DB using ID
+ */ 
 app.delete('/api/playlist/:id', (req, res) => {
     const {
         id

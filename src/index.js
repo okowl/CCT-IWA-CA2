@@ -5,6 +5,9 @@ import 'typeface-roboto';
 import CreateResultCard from './client/CreateResultCard.react';
 import PlaylistTable from './client/PlaylistTable.react';
 
+/**
+ * Method to retrive all information from DB and display it
+ */
 const getAllEntries = (setFetchResult) => {
     fetch("/api/playlist").then(
         (res) => {
