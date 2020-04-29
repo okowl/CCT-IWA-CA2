@@ -26,7 +26,8 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
  /**
-  *  Function to add new entry to DB using POST method
+  * Method that will update front-end after new entry was done on the client side
+  * without reloading the page
   * */ 
 const addEntry = (newData, refetch, setUpdateResult, tableResolve) => {
   return fetch("/api/playlist", {
@@ -56,6 +57,9 @@ const addEntry = (newData, refetch, setUpdateResult, tableResolve) => {
     );
 }
 
+/**
+ * Method that handles DELETE operation and updates client side accordingly
+ */
 const removeEntry = (id, refetch, setUpdateResult, tableResolve) => {
   return fetch(`/api/playlist/${id}`, {
         method: 'delete',
@@ -76,7 +80,9 @@ const removeEntry = (id, refetch, setUpdateResult, tableResolve) => {
 }
 
 
-
+/**
+ * Method that creates initial table with content on the client side 
+ */
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -96,6 +102,7 @@ const tableIcons = {
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
+
 
 export default function PlaylistTable({refetch, fetchResult}) {
     const [updateResult, setUpdateResult] = React.useState(null);

@@ -23,7 +23,7 @@ const getAllEntries = (setFetchResult) => {
     );
 }
 
-
+//Method that initializes app
 const App = () => {
     const [fetchResult, setFetchResult] = React.useState(null);
     const refetch = () => getAllEntries(setFetchResult);
