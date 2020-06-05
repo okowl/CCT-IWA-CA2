@@ -3,4 +3,3 @@ This is a project for a CCT Dublin (IWA CA2)
 It is a React/Redux application bundled with Parcel that implements a Mongo DB Atlas based CRUD interface for playlists.
 It uses Material UI and css in js approach to styling components.
 
-Deployed app could be found here: https://bdca3.herokuapp.com/
